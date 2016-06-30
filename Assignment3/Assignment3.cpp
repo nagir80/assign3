@@ -250,7 +250,7 @@ WeightedEdge& PriorityQueue::top(void){
 int _tmain(int argc, _TCHAR* argv[])
 {
 	srand(time(0));
-	Graph* graph = new Graph(4,50);
+	Graph* graph = new Graph(10,50);
 	WeightedEdgeGraph *weg = new WeightedEdgeGraph(graph);
 	PriorityQueue* pq = new PriorityQueue();
 
@@ -270,31 +270,42 @@ int _tmain(int argc, _TCHAR* argv[])
 	while(!pq->empty()){
 		WeightedEdge we_h = pq->top();
 		pq->minPrioirty();
-		spanTree2.push_back(we_h);
-		spanTree.push_back(we_h.to());
-		//	length_tree += 
-		for(auto we: weg->edges(we_h.to())){
+		int n = 0;
+		for(auto i: spanTree){
+			if (i == we_h.from())
+				n++;
+		}
+		for(auto i: spanTree){
+			if (i == we_h.to())
+				n++;
+		}
+		if (n<2){
+			spanTree2.push_back(we_h);
+			spanTree.push_back(we_h.to());
+			//	length_tree += 
+			for(auto we: weg->edges(we_h.to())){
 
-				int compare = 0;
-				for (auto i: spanTree2){
-//add to our MST
-					if (i == we){
-						compare = 1;
-						break;
+					int compare = 0;
+					for (auto i: spanTree2){
+	//add to our MST
+						if (i == we){
+							compare = 1;
+							break;
+						}
+					}
+					for (auto i: spanTree){
+	//add to our MST
+						if (i == we.to()){
+							compare = 1;
+							break;
+						}
+					}
+					if (!compare){
+						pq->insert(we);
+
 					}
 				}
-				for (auto i: spanTree){
-//add to our MST
-					if (i == we.to()){
-						compare = 1;
-						break;
-					}
-				}
-				if (!compare){
-					pq->insert(we);
-
-				}
-			}
+		}
 
 		}
 
