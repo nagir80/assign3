@@ -2,7 +2,12 @@
 //
 
 #include "stdafx.h"
+
+
 #include <iostream>
+#include <fstream>
+#include <iterator>
+
 #include <list>
 #include <time.h>
 
@@ -253,6 +258,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	Graph* graph = new Graph(4,50);
 	WeightedEdgeGraph *weg = new WeightedEdgeGraph(graph);
 	PriorityQueue* pq = new PriorityQueue();
+
+	std::ifstream graph_file("graph.txt");
+	std::istream_iterator<int> start(graph_file), end;
+	std::vector<int> words(start, end);
+
 
 		std::cout << *graph << "\r\n";
 	std::cout << *weg << "\r\n";
