@@ -250,7 +250,7 @@ WeightedEdge& PriorityQueue::top(void){
 int _tmain(int argc, _TCHAR* argv[])
 {
 	srand(time(0));
-	Graph* graph = new Graph(10,50);
+	Graph* graph = new Graph(4,50);
 	WeightedEdgeGraph *weg = new WeightedEdgeGraph(graph);
 	PriorityQueue* pq = new PriorityQueue();
 
@@ -319,6 +319,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		length_tree += i.get_weight();
 		std::cout << i << " ";
 	}
+	std::cout << "\r\n";
+	std::cout << "Length of MST: " << length_tree << "\r\n";
 
 	std::cout << "\r\n";
 
