@@ -1,31 +1,32 @@
-// Assignment3.cpp: определяет точку входа для консольного приложения.
-//
-
-#include "stdafx.h"
+// Assignment3.cpp 
+// solution of Assignment based on Prim's alghorithm;
 
 
+#include <stdio.h>
+#include <tchar.h>
 #include <iostream>
 #include <fstream>
 #include <iterator>
-
 #include <list>
 #include <time.h>
-
-
 #include <queue>
-#include <functional>   // std::greater
 #include <algorithm>
-#include <map>
 
+
+//class for data of separate Weighted Edge
 class WeightedEdge
 {   int v;
     int w;
 	double weight;
 public:
+//constructor
 	WeightedEdge(int v, int w, double weight):v(v), w(w), weight(weight){};
+//Getting weight of edge
 	double get_weight(void) const { return weight;}
+// Getting points of edge
 	int from(void) const {return v;}
 	int to(void) const {return w;}
+// friend functions for output of edge and checking equality
 	friend std::ostream& operator<< (std::ostream& out, const WeightedEdge& we); 
 	friend bool operator==(WeightedEdge const& lhs, WeightedEdge const& rhs);
 	~WeightedEdge(void);
@@ -48,7 +49,7 @@ WeightedEdge::~WeightedEdge(void)
 {
 }
 
-
+//Base class for creating Random Graph. 
 class Graph{
 private:
 	bool ** table;
@@ -114,14 +115,21 @@ std::ostream& operator<<(std::ostream& out,  Graph const & gr){
 
 
 
+//List of lists of Weighted edges, which based on Random Graph (previous class)
+// or read from file
 class WeightedEdgeGraph{
 	std::list<std::list<WeightedEdge>> *listEdges;
 	std::list<double> *vert_values;
 public:
+//constructor for creating Weighted Graph based on random graph
 	WeightedEdgeGraph(Graph *graph);
+	//constructor for creating Weighted Graph based on file
+	WeightedEdgeGraph(std::string pathfile);
 	friend std::ostream& operator<<(std::ostream& out,  WeightedEdgeGraph const & gr);
 	std::list<std::list<WeightedEdge>>& get(void) const {return *listEdges;}
+//getting edges from inputted vertex
 	std::list<WeightedEdge> edges(int num_vertex);
+//getting quantity if vertex
 	int get_num_vertex(void) {return vert_values->size();}
 };
 
@@ -149,6 +157,34 @@ WeightedEdgeGraph::WeightedEdgeGraph(Graph *graph){
 		}
 		listEdges->push_back(*hlp_list);
 	}
+}
+
+WeightedEdgeGraph::WeightedEdgeGraph(std::string pathfile){
+	listEdges = new std::list<std::list<WeightedEdge>>();
+	auto hlp_list = new std::list<WeightedEdge>();
+	std::ifstream graph_file(pathfile);
+	std::istream_iterator<int> start(graph_file), end;
+	std::vector<int> words(start, end);
+
+	int num_list = 0;
+	for (auto it = words.begin()+1; it != words.end(); it+=3){
+		int from;
+		int to;
+		double wgt;
+		from = *it;
+		to = *(it + 1);
+		wgt = static_cast<double>(*(it + 2));
+
+		if (num_list != from){
+			listEdges->push_back(*hlp_list);
+			hlp_list->clear();
+			num_list = from;
+		}
+
+		hlp_list->push_back(*new WeightedEdge(from, to, wgt));
+	}
+	listEdges->push_back(*hlp_list);
+	delete hlp_list;
 }
 
 std::list<WeightedEdge> WeightedEdgeGraph::edges(int num_vertex){
@@ -247,64 +283,56 @@ WeightedEdge& PriorityQueue::top(void){
 	return *it_mem;
 }
 
-
-
-
-
-
-int _tmain(int argc, _TCHAR* argv[])
-{
-	srand(time(0));
-	Graph* graph = new Graph(4,50);
-	WeightedEdgeGraph *weg = new WeightedEdgeGraph(graph);
-	PriorityQueue* pq = new PriorityQueue();
-
-	std::ifstream graph_file("graph.txt");
-	std::istream_iterator<int> start(graph_file), end;
-	std::vector<int> words(start, end);
-
-
-		std::cout << *graph << "\r\n";
-	std::cout << *weg << "\r\n";
-//points were included in MST
-	std::list<int> spanTree;
-	std::list<WeightedEdge> spanTree2;
-//length of MST
-	double length_tree = 0.0;
-	for (auto we: weg->edges(0)){
-		pq->insert(we);
-	}
-	spanTree.push_back(0);
-// variable for counting edges in minimum spanning tree
-	int eBegin = -1;
-	while(!pq->empty()){
-		WeightedEdge we_h = pq->top();
-		pq->minPrioirty();
-		int n = 0;
-		for(auto i: spanTree){
-			if (i == we_h.from())
-				n++;
+// class for implementation of Prim's algorithm
+class Prim_MST{
+	PriorityQueue* pq;
+public:
+	std::list<int> out_vertex;
+	std::list<WeightedEdge> out_edges;
+	double cost_tree;
+// constructor gets objects of WeightedEdgeGraph, process it by algorithm and fill lists out_vertex and out_edges
+// which include vertexes and edges of resulting MST
+	Prim_MST(WeightedEdgeGraph *in_graph):cost_tree(0.0){
+		pq = new PriorityQueue();
+// adding of edges from start vertex to priority queue
+		for (auto we : in_graph->edges(0)){
+			pq->insert(we);
 		}
-		for(auto i: spanTree){
-			if (i == we_h.to())
-				n++;
-		}
-		if (n<2){
-			spanTree2.push_back(we_h);
-			spanTree.push_back(we_h.to());
-			//	length_tree += 
-			for(auto we: weg->edges(we_h.to())){
+//adding the start vertex in our MST
+		out_vertex.push_back(0);
+		// variable for counting edges in minimum spanning tree
+
+		while (!pq->empty()){
+//getting edge with the minimal weight
+			WeightedEdge we_h = pq->top();
+			pq->minPrioirty();
+//checking if both vertexes of this edge doesn't include in our MST
+			int n = 0;
+			for (auto i : out_vertex){
+				if (i == we_h.from())
+					n++;
+			}
+			for (auto i : out_vertex){
+				if (i == we_h.to())
+					n++;
+			}
+// if not (n<2) then process more...
+			if (n<2){
+// adding verexes and edges to our MST
+				out_edges.push_back(we_h);
+				out_vertex.push_back(we_h.to());
+// checking if our edge haven't been already added earlier
+				for (auto we : in_graph->edges(we_h.to())){
 
 					int compare = 0;
-					for (auto i: spanTree2){
-	//add to our MST
+					for (auto i : out_edges){
 						if (i == we){
 							compare = 1;
 							break;
 						}
 					}
-					for (auto i: spanTree){
-	//add to our MST
+					for (auto i : out_vertex){
+						//add to our MST
 						if (i == we.to()){
 							compare = 1;
 							break;
@@ -315,25 +343,53 @@ int _tmain(int argc, _TCHAR* argv[])
 
 					}
 				}
-		}
+			}
 
 		}
-
-	for (auto i: spanTree){
-		std::cout << i << " ";
 	}
+// output of result of algoritm working
+	void out_results(void){
+		std::cout << "Vertexes: " << "\r\n";
+		for (auto i : out_vertex){
+			std::cout << i << " ";
+		}
 
 		std::cout << "\r\n";
+		std::cout << "Edges: " << "\r\n";
+		for (auto i : out_edges){
+			cost_tree += i.get_weight();
+			std::cout << i << " ";
+		}
+		std::cout << "\r\n";
+		std::cout << "Cost of MST: " << cost_tree << "\r\n";
 
-	for (auto i: spanTree2){
-		length_tree += i.get_weight();
-		std::cout << i << " ";
+		std::cout << "\r\n";
 	}
-	std::cout << "\r\n";
-	std::cout << "Length of MST: " << length_tree << "\r\n";
 
-	std::cout << "\r\n";
 
+
+};
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	srand(time(0));
+//create the random graph
+	Graph* graph = new Graph(40,50);
+//create WeightedEdgeGraph based on random graph
+	WeightedEdgeGraph *weg = new WeightedEdgeGraph(graph);
+//create WeightedEdgeGraph based on file from site
+	WeightedEdgeGraph *inp_weg = new WeightedEdgeGraph("graph.txt");
+// Apply Prim's algorithm to random graph
+	Prim_MST random_graph_mst(weg);
+// Apply Prim's algorithm to graph from site
+	Prim_MST inp_graph_mst(inp_weg);
+
+//output result for both graphs
+	std::cout << *inp_weg << "\r\n";
+	random_graph_mst.out_results();
+	std::cout << "\r\n";
+	inp_graph_mst.out_results();
+	std::cout << "\r\n";
 
 
 	int i;

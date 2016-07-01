@@ -1,17 +1,16 @@
-﻿Построение начато 01.07.2016 0:47:20.
-     1>Проект "c:\assign3\Assignment3\Assignment3.vcxproj" в узле 2 (целевые объекты Build).
+﻿Build started 01.07.2016 13:44:55.
+     1>Project "d:\Assign3\Assignment3\Assignment3.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\Assignment3.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt Assignment3.cpp
+         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Assignment3.cpp
          Assignment3.cpp
-     1>c:\assign3\assignment3\assignment3.cpp(85): warning C4018: <: несоответствие типов со знаком и без знака
-     1>c:\assign3\assignment3\assignment3.cpp(87): warning C4018: <: несоответствие типов со знаком и без знака
-     1>c:\assign3\assignment3\assignment3.cpp(257): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+     1>d:\assign3\assignment3\assignment3.cpp(86): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\assign3\assignment3\assignment3.cpp(88): warning C4018: '<' : signed/unsigned mismatch
+     1>d:\assign3\assignment3\assignment3.cpp(375): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
        Link:
-         C:\Program Files\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\assign3\Debug\Assignment3.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\assign3\Debug\Assignment3.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\assign3\Debug\Assignment3.lib" /MACHINE:X86 Debug\Assignment3.obj
-         Debug\stdafx.obj
-         Assignment3.vcxproj -> C:\assign3\Debug\Assignment3.exe
-     1>Построение проекта "c:\assign3\Assignment3\Assignment3.vcxproj" завершено (целевые объекты Build).
+         C:\Program Files\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Assign3\Debug\Assignment3.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Assign3\Debug\Assignment3.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Assign3\Debug\Assignment3.lib" /MACHINE:X86 Debug\Assignment3.obj
+         Assignment3.vcxproj -> D:\Assign3\Debug\Assignment3.exe
+     1>Done Building Project "d:\Assign3\Assignment3\Assignment3.vcxproj" (Build target(s)).
 
-Построение успешно завершено.
+Build succeeded.
 
-Затраченное время: 00:00:02.33
+Time Elapsed 00:00:01.38
